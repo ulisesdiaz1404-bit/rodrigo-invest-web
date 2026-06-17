@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MERIDIANO — Design tokens (Tailwind v4, CSS-first)
+   Estética: banca privada / fintech premium en modo oscuro.
+   Navy profundo + acento dorado suave. El verde (#25D366) se
+   reserva EXCLUSIVAMENTE para el botón flotante de WhatsApp.
+   ============================================================ */
+@theme {
+  --color-bg: #070b14;
+  --color-surface: #0d1320;
+  --color-surface-2: #131b2c;
+  --color-border: #233149;
+  --color-fg: #e8edf6;
+  --color-muted: #94a2bb;
+
+  --color-accent: #9db8da; /* azul acero / platino frío */
+  --color-accent-soft: #cdddf0;
+  --color-accent-deep: #6f8fbf;
+  --color-blue: #3a6fb0; /* azul profundo complementario */
+
+  /* Alias para primitivos shadcn (liquid button, etc.) */
+  --color-primary: #e8edf6;
+  --color-primary-foreground: #070b14;
+  --color-ring: #9db8da;
+  --color-accent-foreground: #070b14;
+  --color-input: #233149;
+  --color-background: #070b14;
+  --color-secondary: #131b2c;
+  --color-secondary-foreground: #e8edf6;
+  --color-destructive: #b4453f;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, "Times New Roman", serif;
+
+  --radius: 0.9rem;
+
+  --animate-accordion-down: accordion-down 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+  --animate-accordion-up: accordion-up 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+/* Pulso discreto del botón flotante de WhatsApp (~4.5s, no permanente) */
+@keyframes wa-pulse {
+  0%,
+  18%,
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  4% {
+    opacity: 0.55;
+  }
+  16% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+.wa-pulse-ring {
+  animation: wa-pulse 4.5s ease-out infinite;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #0a0a0a;
+}
+
+/* Scrollbar custom sobrio */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-deep);
+}
+
+/* Texto con gradiente platino/acero reutilizable */
+.text-accent-gradient {
+  background: linear-gradient(
+    100deg,
+    var(--color-accent-soft) 0%,
+    var(--color-accent) 45%,
+    var(--color-accent-deep) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Línea divisoria sutil con brillo del acento al centro */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-accent) 50%, transparent),
+    transparent
+  );
+}
+
+/* ---- Marquee continuo (reseñas en movimiento) ---- */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x 42s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+/* Punto del indicador de scroll (mouse) */
+@keyframes mouse-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.mouse-dot {
+  animation: mouse-dot 1.8s ease-in-out infinite;
+}
+
+/* Float vertical suave para detalles */
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-float {
+  animation: float-soft 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .wa-pulse-ring {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
