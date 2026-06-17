@@ -1,4 +1,4 @@
-import { WebGLShader } from "@/components/ui/web-gl-shader";
+import { CandlestickChart } from "@/components/ui/candlestick-chart";
 import { WhatsAppCta } from "@/components/whatsapp/whatsapp-cta";
 import { Reveal } from "@/components/motion/reveal";
 import { heroContent } from "@/lib/config/site-config";
@@ -7,7 +7,7 @@ export function Hero() {
   const { eyebrow, title, highlight, subtitle, primaryCta, secondaryCta } =
     heroContent;
 
-  // Resalta en dorado la porción "highlight" dentro del título.
+  // Resalta en el color de acento la porción "highlight" del título.
   const [before, after] = title.split(highlight);
 
   return (
@@ -15,29 +15,35 @@ export function Hero() {
       id="top"
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 pt-24 pb-20 sm:px-8"
     >
-      {/* Fondo: shader tintado a marca */}
-      <WebGLShader className="absolute inset-0 block h-full w-full opacity-70" />
+      {/* Fondo: gráfico de velas animado (todo visible) */}
+      <CandlestickChart className="absolute inset-0 block h-full w-full" />
 
-      {/* Overlays para legibilidad */}
+      {/* Gradientes mínimos: header arriba, fundido al fondo abajo */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_30%,transparent_0%,rgba(7,11,20,0.55)_55%,var(--color-bg)_100%)]"
+        className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg/85 to-transparent"
       />
       <div
         aria-hidden
-        className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-bg"
+        className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-bg"
       />
 
-      <div className="relative z-10 mx-auto max-w-3xl text-center">
+      <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
+        {/* Halo suave solo detrás del texto, para legibilidad sin tapar las velas */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-x-10 -inset-y-12 -z-10 rounded-[3rem] bg-bg/40 blur-2xl"
+        />
+
         <Reveal>
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-bg/40 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-accent backdrop-blur-sm">
+          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-bg/50 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-accent backdrop-blur-sm">
             <span className="size-1.5 rounded-full bg-accent" />
             {eyebrow}
           </span>
         </Reveal>
 
         <Reveal delay={0.08}>
-          <h1 className="mt-7 font-serif text-4xl leading-[1.08] tracking-tight text-fg sm:text-5xl md:text-6xl">
+          <h1 className="mt-7 font-serif text-4xl leading-[1.08] tracking-tight text-fg [text-shadow:0_2px_30px_rgba(7,11,20,0.8)] sm:text-5xl md:text-6xl">
             {before}
             <span className="text-accent-gradient">{highlight}</span>
             {after}
@@ -45,7 +51,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={0.16}>
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-fg/80 [text-shadow:0_1px_16px_rgba(7,11,20,0.9)] sm:text-lg">
             {subtitle}
           </p>
         </Reveal>
@@ -69,7 +75,7 @@ export function Hero() {
         aria-label="Bajar"
         className="absolute bottom-7 left-1/2 z-10 hidden -translate-x-1/2 sm:block"
       >
-        <span className="flex h-10 w-6 items-start justify-center rounded-full border border-border/70 p-1.5">
+        <span className="flex h-10 w-6 items-start justify-center rounded-full border border-border/70 bg-bg/30 p-1.5 backdrop-blur-sm">
           <span className="mouse-dot block h-2 w-1 rounded-full bg-accent" />
         </span>
       </a>

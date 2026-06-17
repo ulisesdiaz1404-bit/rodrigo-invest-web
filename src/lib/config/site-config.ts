@@ -42,7 +42,7 @@ export const siteConfig = {
   // Redes sociales (el ícono y el color de glow se resuelven en el componente).
   social: {
     instagram: { handle: "@rodrigomcabot", url: "https://instagram.com/rodrigomcabot" },
-    tiktok: { handle: "@ElProfeDeFinanzas", url: "https://www.tiktok.com/@elprofedefinanzas" },
+    tiktok: { handle: "@elprofedefinanzas-", url: "https://www.tiktok.com/@elprofedefinanzas-" },
     // El link de WhatsApp se arma siempre con getWhatsappLink().
   },
 } as const;
