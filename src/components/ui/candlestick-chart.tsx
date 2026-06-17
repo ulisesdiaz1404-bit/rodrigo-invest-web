@@ -3,11 +3,10 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Fondo del hero: mercado financiero animado.
- * Velas (candlestick) que se desplazan + dos líneas de tendencia onduladas
- * (verde y roja) que fluyen y mutan de forma aleatoria, con flechas en los
- * extremos. Cada carga es distinta (random walk con parámetros aleatorios).
- * Canvas 2D, liviano. Respeta prefers-reduced-motion (cuadro estático).
+ * Fondo del hero: gráfico de velas (candlestick) animado en bucle.
+ * Las velas se desplazan continuamente; verde cuando el precio sube,
+ * rojo cuando baja. Cada carga es distinta (random walk). Canvas 2D liviano.
+ * Respeta prefers-reduced-motion (dibuja un cuadro estático).
  */
 
 interface Candle {
@@ -21,22 +20,6 @@ const UP = "#22c55e";
 const UP_WICK = "rgba(34,197,94,0.85)";
 const DOWN = "#ef4444";
 const DOWN_WICK = "rgba(239,68,68,0.85)";
-const GREEN_LINE = "#22c55e";
-const RED_LINE = "#ef4444";
-
-interface Wave {
-  base: number; // posición vertical (fracción de alto)
-  baseV: number;
-  amp: number; // amplitud (fracción de alto)
-  ampV: number;
-  freq: number;
-  phase: number;
-  speed: number; // sentido/velocidad de flujo
-}
-
-const rand = (a: number, b: number) => a + Math.random() * (b - a);
-const clamp = (v: number, lo: number, hi: number) =>
-  v < lo ? lo : v > hi ? hi : v;
 
 export function CandlestickChart({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -64,21 +47,6 @@ export function CandlestickChart({ className }: { className?: string }) {
     let viewMin = 0;
     let viewMax = 100;
     let rafId = 0;
-    let t = 0;
-
-    const makeWave = (base: number, flow: number): Wave => ({
-      base,
-      baseV: 0,
-      amp: rand(0.08, 0.15),
-      ampV: 0,
-      freq: rand(0.009, 0.015),
-      phase: rand(0, Math.PI * 2),
-      speed: flow,
-    });
-
-    // Parámetros aleatorios → cada visita se ve distinta.
-    let greenWave = makeWave(rand(0.5, 0.66), rand(0.4, 0.8));
-    let redWave = makeWave(rand(0.34, 0.5), -rand(0.4, 0.8));
 
     const nextCandle = (): Candle => {
       const open = lastClose;
@@ -107,73 +75,6 @@ export function CandlestickChart({ className }: { className?: string }) {
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       if (candles.length < countNeeded()) seed();
-    };
-
-    // Evolución lenta y aleatoria de cada onda (random walk amortiguado).
-    const evolveWave = (w: Wave) => {
-      w.baseV += rand(-0.0009, 0.0009);
-      w.baseV *= 0.95;
-      w.base = clamp(w.base + w.baseV, 0.22, 0.78);
-      w.ampV += rand(-0.0004, 0.0004);
-      w.ampV *= 0.95;
-      w.amp = clamp(w.amp + w.ampV, 0.05, 0.19);
-      w.phase += w.speed * 0.012;
-    };
-
-    const waveY = (w: Wave, x: number) =>
-      (w.base +
-        Math.sin(x * w.freq + w.phase) * w.amp +
-        Math.sin(x * w.freq * 0.5 + w.phase * 1.3) * w.amp * 0.35) *
-      height;
-
-    const triangle = (x: number, y: number, up: boolean, color: string) => {
-      const s = 7;
-      ctx.save();
-      ctx.fillStyle = color;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 12;
-      ctx.globalAlpha = 0.95;
-      ctx.beginPath();
-      if (up) {
-        ctx.moveTo(x, y - s);
-        ctx.lineTo(x - s, y + s);
-        ctx.lineTo(x + s, y + s);
-      } else {
-        ctx.moveTo(x, y + s);
-        ctx.lineTo(x - s, y - s);
-        ctx.lineTo(x + s, y - s);
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-    };
-
-    const drawWave = (w: Wave, color: string, up: boolean) => {
-      let extX = 0;
-      let extY = up ? Infinity : -Infinity; // y mínimo (arriba) para flecha up
-      ctx.save();
-      ctx.setLineDash([10, 9]);
-      ctx.lineDashOffset = -t * 0.9 * Math.sign(w.speed || 1);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = color;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 10;
-      ctx.globalAlpha = 0.85;
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += 7) {
-        const y = waveY(w, x);
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-        if (up ? y < extY : y > extY) {
-          extY = y;
-          extX = x;
-        }
-      }
-      ctx.stroke();
-      ctx.restore();
-      // flecha en el extremo (verde sube ▲ en su punto más bajo de precio /
-      // alto en pantalla; roja baja ▼ en su pico).
-      triangle(extX, extY, up, color);
     };
 
     const draw = () => {
@@ -230,22 +131,15 @@ export function CandlestickChart({ className }: { className?: string }) {
         ctx.fillRect(x - bodyW / 2, top, bodyW, h);
         ctx.globalAlpha = 1;
       }
-
-      // líneas de tendencia onduladas (encima de las velas)
-      drawWave(greenWave, GREEN_LINE, true);
-      drawWave(redWave, RED_LINE, false);
     };
 
     const tick = () => {
-      t += 1;
       scrollX += speed;
       while (scrollX >= spacing) {
         scrollX -= spacing;
         candles.shift();
         candles.push(nextCandle());
       }
-      evolveWave(greenWave);
-      evolveWave(redWave);
       draw();
       rafId = requestAnimationFrame(tick);
     };
