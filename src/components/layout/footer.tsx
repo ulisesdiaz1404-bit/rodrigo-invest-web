@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { getWhatsappLink, getSocialLinks, siteConfig } from "@/lib/config/site-config";
-import { BrandMark } from "@/components/ui/brand-mark";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -10,7 +10,13 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           <div className="flex items-center gap-2.5">
-            <BrandMark className="size-7" />
+            <Image
+              src="/brand/logo-mark.png"
+              alt={siteConfig.brand.name}
+              width={285}
+              height={198}
+              className="h-7 w-auto"
+            />
             <span className="font-serif text-lg text-fg">
               Rodrigo Madrid Cabot
             </span>
