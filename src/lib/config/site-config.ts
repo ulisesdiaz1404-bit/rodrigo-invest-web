@@ -13,11 +13,11 @@ export const siteConfig = {
     // +54 9 11 2155-5695  ->  +5491121555695
     phoneNumber: "+5491121555695",
     defaultMessage:
-      "Hola, quiero más información sobre el informe de mercado de Rodrigo.invest.",
+      "Hola, quiero más información sobre el informe de mercado de Rodrigo Madrid Cabot.",
   },
 
   brand: {
-    name: "Rodrigo.invest",
+    name: "Rodrigo Madrid Cabot",
     // Sufijo opcional usado junto al logo y en la metadata.
     suffix: "Research de mercado",
     tagline: "Informes de mercado claros, listos para compartir con tus clientes",
@@ -26,7 +26,7 @@ export const siteConfig = {
   },
 
   seo: {
-    title: "Rodrigo.invest · Informe de Mercado para asesores financieros",
+    title: "Rodrigo Madrid Cabot · Informe de Mercado para asesores financieros",
     description:
       "Un informe de mercado profesional, claro y listo para reenviar a tus clientes. Quedás como el asesor que siempre está al día, sin tener que producir el contenido. Coordinamos todo por WhatsApp.",
     keywords: [
@@ -71,9 +71,9 @@ export const heroContent = {
 } as const;
 
 export const valueProposition = {
-  eyebrow: "Qué es Rodrigo.invest",
+  eyebrow: "Qué es",
   title: "Vos asesorás. Del contenido nos encargamos nosotros.",
-  body: "Rodrigo.invest es un informe de mercado periódico, pensado para que lo reenvíes a tus clientes con tu sello. Lo escribimos en lenguaje claro —sin jerga innecesaria— para que cualquier cliente, tenga o no formación financiera, lo entienda. Vos te quedás con el mérito de mantenerlos informados; nosotros hacemos el trabajo pesado de research y redacción.",
+  body: "El informe de Rodrigo Madrid Cabot es un research de mercado periódico, pensado para que lo reenvíes a tus clientes con tu sello. Lo escribimos en lenguaje claro —sin jerga innecesaria— para que cualquier cliente, tenga o no formación financiera, lo entienda. Vos te quedás con el mérito de mantenerlos informados; nosotros hacemos el trabajo pesado de research y redacción.",
 } as const;
 
 export const benefits: { iconKey: string; title: string; description: string }[] = [

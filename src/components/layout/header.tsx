@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getWhatsappLink, siteConfig } from "@/lib/config/site-config";
+import { BrandMark } from "@/components/ui/brand-mark";
 import { WhatsAppGlyph } from "@/components/ui/social-icons";
 
 export function Header() {
@@ -12,16 +12,9 @@ export function Header() {
           className="group flex items-center gap-2.5"
           aria-label={`${siteConfig.brand.name} — inicio`}
         >
-          <Image
-            src="/brand/logo-mark.png"
-            alt=""
-            width={36}
-            height={36}
-            priority
-            className="size-9 transition-transform duration-500 ease-out group-hover:rotate-[8deg]"
-          />
-          <span className="font-serif text-xl tracking-tight text-fg">
-            Rodrigo<span className="text-accent">.invest</span>
+          <BrandMark className="size-9 transition-transform duration-500 ease-out group-hover:rotate-[8deg]" />
+          <span className="font-serif text-base leading-tight tracking-tight text-fg sm:text-lg">
+            Rodrigo Madrid Cabot
           </span>
         </Link>
 
